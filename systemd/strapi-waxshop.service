@@ -5,7 +5,7 @@ After=syslog.target network-online.target
 
 [Service]
 WorkingDirectory=/opt/waxshop-strapi
-ExecStart=/home/ubuntu/.nvm/versions/node/v12.9.1/bin/npm run start
+ExecStart=/home/ubuntu/.nvm/versions/node/v12.18.1/bin/npm run start
 Restart=always
 # Restart service after 10 seconds if node service crashes 
 RestartSec=10
