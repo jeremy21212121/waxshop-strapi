@@ -1,0 +1,20 @@
+[Unit]
+Description=Waxshop Strapi API
+Wants=network-online.target nginx.service
+After=syslog.target network-online.target
+
+[Service]
+WorkingDirectory=/opt/waxshop-strapi
+ExecStart=/home/ubuntu/.nvm/versions/node/v12.9.1/bin/npm run start
+Restart=always
+# Restart service after 10 seconds if node service crashes 
+RestartSec=10
+# Output to syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=waxshop-strapi
+User=strapi
+Group=strapi
+
+[Install]
+WantedBy=multi-user.target
