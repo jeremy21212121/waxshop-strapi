@@ -19,7 +19,8 @@
     },
     "published": {
       "type": "boolean",
-      "required": true
+      "required": true,
+      "private": true
     },
     "date": {
       "type": "date"
@@ -32,6 +33,9 @@
       ],
       "plugin": "upload",
       "required": false
+    },
+    "slug": {
+      "type": "string"
     }
   }
 }

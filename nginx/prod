@@ -1,0 +1,67 @@
+map $sent_http_content_type $expires {
+    default                    off;
+    text/html                  epoch;
+    text/css                   max;
+    ~application/	       epoch;
+    ~image/                    max;
+}
+
+proxy_cache_path /var/cache/nginx-strapi levels=1:2 keys_zone=strapi_waxshop:1m max_size=1g inactive=1h use_temp_path=off;
+
+server {
+
+	root /var/www/waxshopstaff;
+
+	index index.html;
+
+	server_name staff.waxshop.ca;
+	server_tokens off;
+
+	expires $expires;
+
+	gzip on;
+	gzip_proxied any;
+	gzip_types text/css application/javascript;
+	gzip_min_length 1000;
+
+	location / {
+		proxy_cache strapi_waxshop;
+		# add 'updating' to the following if > 1.11.10 #
+		proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504;
+		# proxy_cache_background_update on;#only supported on > 1.11.10 #
+		proxy_http_version 1.1;
+		proxy_set_header X-Forwarded-Host $host;
+		proxy_set_header X-Forwarded-Server $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_set_header Host $http_host;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "Upgrade";
+		proxy_pass_request_headers on;
+		add_header 'x-powered-by' '';
+		proxy_pass http://127.0.0.1:1337;
+	}
+
+    listen [::]:443 ssl; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/staff.waxshop.ca/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/staff.waxshop.ca/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+server {
+    if ($host = staff.waxshop.ca) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+	listen 80;
+	listen [::]:80;
+
+	server_name staff.waxshop.ca;
+    return 404; # managed by Certbot
+
+
+}
