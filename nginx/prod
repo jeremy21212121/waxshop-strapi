@@ -24,6 +24,22 @@ server {
 	gzip_types text/css application/javascript;
 	gzip_min_length 1000;
 
+	location /admin {
+		# This only differs from the following location block (/) in that there is no caching
+		proxy_http_version 1.1;
+		proxy_set_header X-Forwarded-Host $host;
+		proxy_set_header X-Forwarded-Server $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_set_header Host $http_host;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "Upgrade";
+		proxy_pass_request_headers on;
+		proxy_hide_header x-powered-by;
+		proxy_pass http://127.0.0.1:1337/admin;
+	}
+
 	location / {
 		proxy_cache strapi_waxshop;
 		# add 'updating' to the following if > 1.11.10 #
@@ -39,7 +55,7 @@ server {
 		proxy_set_header Upgrade $http_upgrade;
 		proxy_set_header Connection "Upgrade";
 		proxy_pass_request_headers on;
-		add_header 'x-powered-by' '';
+		proxy_hide_header x-powered-by;
 		proxy_pass http://127.0.0.1:1337;
 	}
 
