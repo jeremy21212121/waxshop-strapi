@@ -9,13 +9,15 @@
     "timestamps": true
   },
   "attributes": {
-    "body": {
+    "markdown": {
       "type": "richtext",
-      "required": false
+      "required": false,
+      "private": true
     },
     "title": {
       "type": "string",
-      "required": true
+      "required": true,
+      "unique": true
     },
     "published": {
       "type": "boolean",
@@ -36,6 +38,15 @@
     },
     "slug": {
       "type": "string"
+    },
+    "html": {
+      "type": "text"
+    },
+    "introText": {
+      "type": "text"
+    },
+    "fullText": {
+      "type": "text"
     }
   }
 }
