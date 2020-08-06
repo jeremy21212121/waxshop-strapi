@@ -1,6 +1,6 @@
 const slugify = require("slugify");
 const generationErrorHandler = require("./generationErrorHandler.js");
-const slugifyOptions = { lower: true, locale: "en" };
+const slugifyOptions = { lower: true, locale: "en", remove: /[*+~.()'"!:@]/g };
 
 const generateSlug = data => {
   try {
